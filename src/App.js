@@ -66,7 +66,10 @@ function App() {
 					},
 				}
 			);
-			console.log(response);
+			if (response.status === 200) {
+				getUserNotes(currUserId);
+				setNoteMsg("");
+			}
 		} catch (err) {
 			console.log(err);
 		}
@@ -234,6 +237,7 @@ function App() {
 								type="button"
 								className="btn btn-primary"
 								onClick={btnAddUserNote}
+								data-dismiss="modal"
 								disabled={currUserId === ""}
 							>
 								Add
