@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 function App() {
 	const [userNotes, setUserNotes] = useState([]);
 	const [currUserId, setCurrUserId] = useState("");
-	const [userData, setUserData] = useState();
+	const [noteMsg, setNoteMsg] = useState("");
 	const [formData, setFormData] = useState({
 		firstname: "",
 		lastname: "",
@@ -43,8 +43,6 @@ function App() {
 					},
 				}
 			);
-
-			setUserData(response.data);
 			setCurrUserId(response.data.id);
 			if (response.data.id) {
 				alert("Successfully created the user.");
@@ -53,6 +51,35 @@ function App() {
 			console.log(err);
 		}
 	}
+
+	async function addUserNote(note) {
+		try {
+			const response = await axios.post(
+				`${baseUrl}/newnote.php`,
+				{
+					id: currUserId,
+					note: note,
+				},
+				{
+					headers: {
+						"Content-Type": "application/x-www-form-urlencoded",
+					},
+				}
+			);
+			console.log(response);
+		} catch (err) {
+			console.log(err);
+		}
+	}
+
+	const btnAddUserNote = () => {
+		addUserNote(noteMsg);
+	};
+
+	const changeNoteMsg = (event) => {
+		const msg = event.target.value;
+		setNoteMsg(msg);
+	};
 
 	const changeUser = (event) => {
 		const userId = event.target.value;
@@ -189,6 +216,7 @@ function App() {
 										className="form-control"
 										id="message-text"
 										style={{ backgroundColor: "#fff7d1" }}
+										onChange={changeNoteMsg}
 										disabled={currUserId === ""}
 									></textarea>
 								</div>
@@ -205,6 +233,7 @@ function App() {
 							<button
 								type="button"
 								className="btn btn-primary"
+								onClick={btnAddUserNote}
 								disabled={currUserId === ""}
 							>
 								Add
